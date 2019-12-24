@@ -33,6 +33,8 @@ $i++;
 $adminmenu[$i]['title'] = "匯出";
 $adminmenu[$i]['link']  = 'admin/export.php';
 
-
+$i++;
+$adminmenu[$i]['title'] = "試場名單";
+$adminmenu[$i]['link']  = 'admin/class.php';
 
 ?>
