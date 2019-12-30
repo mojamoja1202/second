@@ -16,14 +16,15 @@ function chooseForm(){
 
 //show出目前所有的對照表
 function classShow($place){
+  $p=$place;
   global $xoopsDB;
-  $sql="select sn,id from `" . $xoopsDB->prefix('second_grade') . "` where `place`=$place order by id";
+  $sql="select sn,id from `" . $xoopsDB->prefix('second_grade') . "` where `place`=$p order by id";
   $result=$xoopsDB->query($sql);
   $classNum=$xoopsDB->getRowsNum($result);
   if ($classNum==0){
     $classList="<h2><font color='blue'>目前試場未設置學生</font></h2>";
   }else{
-    $classList="<h1 align='center'>第$place試場名單</h1>";
+    $classList="<h1 align='center'>第" . $p . "試場名單</h1>";
     $classList.="<table>";
     $classList.="<tr><th>鑑定證號碼</th><th>管理</th></tr>";
     while(list($sn,$id)=$xoopsDB->fetchRow($result)){
@@ -38,14 +39,44 @@ function classShow($place){
 //刪除
 function del($sn){
   global $xoopsDB;
-  $sql="delete from `" . $xoopsDB->prefix('second_check4') . "` where sn=$sn";
+  $sql="delete from `" . $xoopsDB->prefix('second_grade') . "` where sn=$sn";
   $xoopsDB->queryF($sql) or die($sql);
+}
+
+
+//修改鑑定證號的表單
+function updateForm($sn){
+  global $xoopsDB;
+  $sql="select sn,id from `" . $xoopsDB->prefix('second_grade') . "` where `sn`=$sn";
+  $result=$xoopsDB->query($sql) or die($sql);
+  list($sn, $id)=$xoopsDB->fetchRow($result);
+  $main="<h1>修改$name</h1>";
+  $main.="<form action='class.php?op=update&sn=$sn' method='POST'>";
+  $main.="<table>";
+  $main.="<tr><th>編號</th><td><input type='text' name='id' value=$id></td></tr>";
+  $main.="<tr><td></td><td><input type='hidden' name='sn' value=$sn></td></tr>";
+  $main.="<tr><td></td><td><input type='submit' value='修改'></td></tr>";
+  $main.="</table>";
+  $main.="</form>";
+
+  return $main;
+}
+
+
+//修改資料
+function update($sn){
+  global $xoopsDB;
+  $sql="update `" . $xoopsDB->prefix('second_grade') . "` set
+  `id`    =   '{$_POST['id']}' where sn=$sn";
+  $xoopsDB->queryF($sql) or die($sql);
+
 }
 
 
 //-----判斷區-----
 $op=(empty($_REQUEST['op']))?"":$_REQUEST['op'];
 $sn=(empty($_REQUEST['sn']))?"":$_REQUEST['sn'];
+$id=(empty($_REQUEST['id']))?"":$_REQUEST['id'];
 $place=(empty($_REQUEST['place']))?"":$_REQUEST['place'];
 
 $main="";
@@ -66,6 +97,23 @@ switch ($op)
   $main.=classShow($place);
 
   break;
+
+  case "updateForm":
+
+  $main=updateForm($sn);
+
+  break;
+
+  case "update";
+
+  update($sn);
+  redirect_header("class.php",3,"修改成功");
+
+  break;
+
+
+
+
 
   default:
   $main = chooseForm();
