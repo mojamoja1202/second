@@ -248,7 +248,7 @@ pagesetup_null()
 self.print()
 </script>
 ";
-	$content.="<h2 align='center'>高雄市107學年度一般智能資優資源班入班甄選</h2>";
+	$content.="<h2 align='center'>高雄市108學年度一般智能資優資源班入班甄選</h2>";
 	$content.="<h3 align='center'>初試成績計算表（二年級）</h3>";
 	$content.="<h6>試場編號：" . $p . "</h6>";
 	$content.="<table border='2'>";
